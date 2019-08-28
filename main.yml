@@ -1,0 +1,61 @@
+Description:
+  Archivo principal de Stack
+
+Parameters:
+  Template:
+    Type: String
+    Description: Bucket de S3 donde se almacenan los templates
+
+  VPC:
+    Type: String
+    Description: Ingresar un nombre para la VPC
+
+Resources:
+  NetworkStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "https://s3.amazonaws.com/${Template}/vpc.yml"
+      Parameters:
+        VPCName: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: VCPCreation
+
+  EFSStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "https://s3.amazonaws.com/${Template}/efs.yml"
+      Parameters:
+        VpcId: !GetAtt NetworkStack.Outputs.VPC
+        PublicSubnet1: !GetAtt NetworkStack.Outputs.SubnetPublic1
+        PublicSubnet2: !GetAtt NetworkStack.Outputs.SubnetPublic2
+        PublicSubnet3: !GetAtt NetworkStack.Outputs.SubnetPublic3
+        SecurityGroupVPC: !GetAtt NetworkStack.Outputs.SGroup
+      Tags:
+        - Key: Name
+          Value: EFSVolume
+
+  LCAutoScaling:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "https://s3.amazonaws.com/${Template}/lconf.yml"
+      Parameters:
+        SecurityGroupLC: !GetAtt NetworkStack.Outputs.SGroup
+        EFSVol: !GetAtt EFSStack.Outputs.FileSystem
+      Tags:
+        - Key: Name
+          Value: LCStack
+
+  AutoScalingStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "https://s3.amazonaws.com/${Template}/scl.yml"
+      Parameters:
+        LaunchConfiguration: !GetAtt LCAutoScaling.Outputs.LConf
+        Subnet1: !GetAtt NetworkStack.Outputs.SubnetPublic1
+        Subnet2: !GetAtt NetworkStack.Outputs.SubnetPublic2
+        Subnet3: !GetAtt NetworkStack.Outputs.SubnetPublic3
+        SGroup: !GetAtt NetworkStack.Outputs.SGroup
+      Tags:
+        - Key: Name
+          Value: ACStack

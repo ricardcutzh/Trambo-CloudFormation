@@ -1,0 +1,57 @@
+Description:
+  Archivo que describe el AutoScaling Group
+
+Parameters:
+  LaunchConfiguration:
+    Type: String
+    Description: COnfiguracion para lanzar las EC2
+
+  Subnet1:
+    Type: String
+    Description: Subred publica 1
+
+  Subnet2:
+    Type: String
+    Description: Subred publica 2
+
+  Subnet3:
+    Type: String
+    Description: Subred publica 3
+
+  SGroup:
+    Type: String
+    Description: Grupo de Seguridad
+
+Resources:
+
+  LBalancerClassic:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      SecurityGroups:
+        - !Ref SGroup
+      Listeners:
+        - LoadBalancerPort: '80'
+          InstancePort: '80'
+          Protocol: HTTP
+      HealthCheck:
+        Target: HTTP:80/index.html
+        HealthyThreshold: '3'
+        UnhealthyThreshold: '5'
+        Interval: '30'
+        Timeout: '5'
+      Subnets:
+        - !Ref Subnet1
+
+  AScaling:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    DependsOn: LBalancerClassic
+    Properties:
+      AutoScalingGroupName: ASGRicardo
+      DesiredCapacity: '2'
+      LaunchConfigurationName: !Ref LaunchConfiguration
+      LoadBalancerNames:
+        - !Ref LBalancerClassic
+      MinSize: '2'
+      MaxSize: '2'
+      VPCZoneIdentifier:
+        - !Ref Subnet1

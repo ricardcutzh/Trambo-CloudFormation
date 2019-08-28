@@ -1,0 +1,268 @@
+Description:
+  "Archivo para crear la vpc del ejercicio 3"
+
+Parameters:
+
+  #Nombre de la VPC
+
+  VPCName:
+    Type: String
+    Default: "vpc_cf_ricardcutzh"
+    Description: Nombre de la vpc a crear
+
+  #Nombres de las subnets en la vpc | PUBLICAS
+  Subnet1Name:
+    Type: String
+    Default: "public_subnet1_ricardcutzh"
+    Description: Nombre de la subnet 1 publica
+
+  Subnet2Name:
+    Type: String
+    Default: "public_subnet2_ricardcutzh"
+    Description: Nombre de la subnet 2 publica
+
+  Subnet3Name:
+    Type: String
+    Default: "public_subnet3_ricardcutzh"
+    Description: Nombre de la subnet 3 publica
+
+
+  #Nombres de las subnets en la vpc | PRIVADAS
+  Subnet4Name:
+    Type: String
+    Default: "private_subnet4_ricardcutzh"
+    Description: Nombre de la subnet 4 privada
+
+  Subnet5Name:
+    Type: String
+    Default: "private_subnet5_ricardcutzh"
+    Description: Nombre de la subnet 5 privada
+
+  Subnet6Name:
+    Type: String
+    Default: "private_subnet6_ricardcutzh"
+    Description: Nombre de la subnet 6 privada
+
+
+  #Parametros de los CIDR
+  CIDRBlock:
+    Type: String
+    Default: 192.168.0.0
+    Description: Bloque de direcciones que conforman la vpc
+
+  NetworkMask:
+    Type: String
+    Default: "/24"
+    Description: mascara de subred default
+
+# DECLARACION DE LOS RECURSOS
+Resources:
+
+  #Creacion de la VPC
+
+  VPCcreation:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Join ["", [!Ref CIDRBlock,!Ref NetworkMask]]
+      EnableDnsHostnames: 'false'
+      EnableDnsSupport: 'false'
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: !Ref VPCName
+
+  #Declarando las subnets publicas
+
+  PublicSubnet1:
+     Type: AWS::EC2::Subnet
+     Properties:
+       CidrBlock: !Join ["", ["192.168.0.0","/27"]]
+       AvailabilityZone: us-west-2a
+       MapPublicIpOnLaunch: 'true'
+       Tags:
+         - Key: Name
+           Value: !Ref Subnet1Name
+       VpcId: !Ref VPCcreation
+
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: !Join ["", ["192.168.0.32","/27"]]
+      AvailabilityZone: us-west-2a
+      MapPublicIpOnLaunch: 'true'
+      Tags:
+        - Key: Name
+          Value: !Ref Subnet2Name
+      VpcId: !Ref VPCcreation
+
+  PublicSubnet3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: !Join ["", ["192.168.0.94","/27"]]
+      AvailabilityZone: us-west-2a
+      MapPublicIpOnLaunch: 'true'
+      Tags:
+        - Key: Name
+          Value: !Ref Subnet3Name
+      VpcId: !Ref VPCcreation
+
+  #Declarando las subnets privadas
+
+  PrivateSubnet4:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: !Join ["", ["192.168.0.126","/27"]]
+      AvailabilityZone: us-west-2b
+      MapPublicIpOnLaunch: 'false'
+      Tags:
+        - Key: Name
+          Value: !Ref Subnet4Name
+      VpcId: !Ref VPCcreation
+
+  PrivateSubnet5:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: !Join ["", ["192.168.0.158","/27"]]
+      AvailabilityZone: us-west-2b
+      MapPublicIpOnLaunch: 'false'
+      Tags:
+        - Key: Name
+          Value: !Ref Subnet5Name
+      VpcId: !Ref VPCcreation
+
+  PrivateSubnet6:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: !Join ["", ["192.168.0.190","/27"]]
+      AvailabilityZone: us-west-2b
+      MapPublicIpOnLaunch: 'false'
+      Tags:
+        - Key: Name
+          Value: !Ref Subnet6Name
+      VpcId: !Ref VPCcreation
+
+  #Declarando el InternetGateway
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: IG_VPC_ricardcutzh
+
+  #Uniendo el InternetGateway a la VPC
+
+  AttachmentIG:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref VPCcreation
+
+  #Creando las route tables
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: TablaRutasPublicas
+      VpcId: !Ref VPCcreation
+
+  # ruta de salida a internet en el gateway
+  InternetRoute:
+    Type: AWS::EC2::Route
+    DependsOn: InternetGateway
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  # asociaciones de las subntes con la ruta
+  PublicSubnetAsociationSubnet1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet1
+
+  PublicSubnetAsociationSubnet2:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet2
+
+  PublicSubnetAsociationSubnet3:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet3
+
+  # Creanto la tabla de rutas para las redes privadas
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      Tags:
+        - Key: Name
+          Value: TablaRutasPrivadas
+      VpcId: !Ref VPCcreation
+
+  # Creando las asociaciones
+  PrivateSubnetAsociationSubnet1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref PrivateSubnet4
+
+  PrivateSubnetAsociationSubnet2:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref PrivateSubnet5
+
+  PrivateSubnetAsociationSubnet3:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref PrivateSubnet6
+
+  SecurityGroupVPC:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security Group para la VPC
+      Tags:
+        - Key: Name
+          Value: ricardcutzh-sg-vp-CloudFormation
+      VpcId: !Ref VPCcreation
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 2049
+          ToPort: 2049
+          CidrIp: 0.0.0.0/0
+
+Outputs:
+  # Outputs de stack de Network
+  VPC:
+    Description: Devuelve el id de la vpc que se crea
+    Value: !Ref VPCcreation
+
+  SubnetPublic1:
+    Description: Devuelve el id de la subnet publica 1
+    Value: !Ref PublicSubnet1
+
+  SubnetPublic2:
+    Description: Devuelve el id de la subnet publica 2
+    Value: !Ref PublicSubnet2
+
+  SubnetPublic3:
+    Description: Devuelve el id de la subnet publica 3
+    Value: !Ref PublicSubnet3
+
+  SGroup:
+    Description: Security Group Definido para la vpc
+    Value: !Ref SecurityGroupVPC

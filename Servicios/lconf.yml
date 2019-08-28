@@ -1,0 +1,49 @@
+Description:
+  Archivo para crear el Launch COnfiguration
+
+Parameters:
+  SecurityGroupLC:
+    Type: String
+    Description: Grupo de Seguridad
+
+  EFSVol:
+    Type: String
+    Description: Sistema de Archivos (ID)
+
+Resources:
+  LConfiguration:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      ImageId: ami-0b37e9efc396e4c38
+      InstanceMonitoring: 'false'
+      InstanceType: 't2.micro'
+      LaunchConfigurationName: 'lc-ricardcutzh'
+      SecurityGroups:
+        - !Ref SecurityGroupLC
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/bin/bash
+            sudo apt-get update
+            sudo apt-get install awscli -y
+            sudo apt update
+            sudo apt install nginx -y
+
+            sudo apt-get install nfs-common
+            git clone https://github.com/aws/efs-utils
+            cd efs-utils
+            sudo apt-get update
+            sudo apt-get -y install binutils
+            sudo ./build-deb.sh
+            sudo apt-get -y install ./build/amazon-efs-utils*deb
+
+            cd /var/www/
+            sudo mount -t efs ${EFSVol}:/ /var/www/html/
+            systemctl start nginx
+            echo "<html><h1> STACK-RICARDO </h1></html>" >> /var/www/html/index.html
+
+Outputs:
+
+  LConf:
+    Description: Identificador del launch configuration
+    Value: !Ref LConfiguration

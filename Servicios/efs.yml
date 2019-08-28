@@ -1,0 +1,49 @@
+Description:
+  "Archivo encargado de la creacion del volumen"
+
+Parameters:
+
+  VpcId:
+    Type: String
+    Description: Id de la Vpc que se crea en la Network Stack
+
+  PublicSubnet1:
+    Type: String
+    Description: Id de la Subnet publica 1
+
+  PublicSubnet2:
+    Type: String
+    Description: Id de la Subnet publica 2
+
+  PublicSubnet3:
+    Type: String
+    Description: Id de la Subnet publica 3
+
+  SecurityGroupVPC:
+    Type: String
+    Description: id del Security Group de la VPC
+
+Resources:
+
+  EFSVolume:
+    Type: AWS::EFS::FileSystem
+    Properties:
+      Encrypted: 'false'
+
+  EFSMount:
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId: !Ref EFSVolume
+      SecurityGroups:
+        - Ref: SecurityGroupVPC
+      SubnetId: !Ref PublicSubnet1
+
+Outputs:
+
+  FileSystem:
+    Description: Nombre del volumen EFS
+    Value: !Ref EFSVolume
+
+  MoutTargetEFS:
+    Description: donde se monta el efs
+    Value: !Ref EFSMount
