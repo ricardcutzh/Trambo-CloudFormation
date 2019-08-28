@@ -40,7 +40,7 @@ Resources:
             cd /var/www/
             sudo mount -t efs ${EFSVol}:/ /var/www/html/
             systemctl start nginx
-            echo "<html><h1> STACK-RICARDO </h1></html>" >> /var/www/html/index.html
+            echo "<html><h1> Ricardo-stack </h1></html>" >> /var/www/html/index.html
 
 Outputs:
 
