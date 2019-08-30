@@ -67,3 +67,6 @@ Consideraciones:
 | Subnet2    | ID de la subnet 2 creada en NetworkStack    |   String |
 | Subnet3    | ID de la subnet 3 creada en NetworkStack    |   String|
 | SGroup    | ID del security Group creado en NetworkStack  |   String |
+
+## Diagrama
+![Diagram](AWS.jpg)
