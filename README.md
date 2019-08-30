@@ -62,7 +62,7 @@ Create exercise 4 using cloudformation
 | Parameter      | Description | Type    |
 | :---        |    :----:   |          ---: |
 | LaunchConfiguration    | Launch Configuration id created in the LCAutoScalingStack   |   String |
-| EFSVol    | ID of the EFS Volume create in the EFSStack  |   String |
+| EFSVol    | ID of the EFS Volume created in the EFSStack  |   String |
 | Subnet1    | ID of the public subnet 1   |   String |
 | Subnet2    | ID of the public subnet 2     |   String |
 | Subnet3    | ID of the public subnet 3    |   String|
