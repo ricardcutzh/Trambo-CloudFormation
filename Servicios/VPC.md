@@ -1,78 +1,78 @@
 # vpc.yml
 
-## Parametros
+## Parameters
 | Parameter      | Description | Type    |
 | :---        |    :----:   |          ---: |
-| VPCName     | Nombre de la VPC     |   String |
-| Subnet1Name     | Nombre de la subred 1     |   String |
-| Subnet2Name     | Nombre de la subred 2     |   String |
-| Subnet3Name     | Nombre de la subred 3     |   String |
-| Subnet4Name     | Nombre de la subred 4     |   String |
-| Subnet5Name     | Nombre de la subred 5     |   String |
-| Subnet6Name     | Nombre de la subred 6     |   String |
-| CIDRBlock     | Bloque de direcciones que conforman la VPC    |   String |
-| NetworkMask     | Definicion de la mascara de subred para la VCP    |   String |
+| VPCName     | Name of the VPC     |   String |
+| Subnet1Name     | Name of the subnet 1    |   String |
+| Subnet2Name     | Name of the subnet 2     |   String |
+| Subnet3Name     | Name of the subnet 3     |   String |
+| Subnet4Name     | Name of the subnet 4   |   String |
+| Subnet5Name     | Name of the subnet 5     |   String |
+| Subnet6Name     | Name of the subnet 6     |   String |
+| CIDRBlock     | address block for the VPC   |   String |
+| NetworkMask     | Subnetmask to be used for the VPC    |   String |
 
-## Recursos
+## Resources
 ### VPC
-* Bloque de IP de la VPC: 192.168.0.0/24 
+* Block address for the VPC: 192.168.0.0/24 
 
-### Subnet 1 (Publica)
-* Bloque de IP: 192.168.0.0/27
+### Subnet 1 (Public)
+* Address Block: 192.168.0.0/27
 * Availability Zone: us-west-2a
-* Con asignacion de IPs publicas automaticamente
+* Automatic public IP assigment
 
-### Subnet 2 (Publica)
-* Bloque de IP: 192.168.0.32/27
+### Subnet 2 (Public)
+* Address Block: 192.168.0.32/27
 * Availability Zone: us-west-2a
-* Con asignacion de IPs publicas automaticamente
+* Automatic public IP assigment
 
-### Subnet 3 (Publica)
-* Bloque de IP: 192.168.0.94/27
+### Subnet 3 (Public)
+* Address Block: 192.168.0.94/27
 * Availability Zone: us-west-2a
-* Con asignacion de IPs publicas automaticamente
+* Automatic public IP assigment
 
-### Subnet 4 (Privada)
-* Bloque de IP: 192.168.0.126/27
+### Subnet 4 (Private)
+* Address Block: 192.168.0.126/27
 * Availability Zone: us-west-2b
-* Sin asignacion de IPs publicas automaticamente
+* No Automatic public IP assigment
 
-### Subnet 5 (Privada)
-* Bloque de IP: 192.168.0.158/27
+### Subnet 5 (Private)
+* Address Block: 192.168.0.158/27
 * Availability Zone: us-west-2b
-* Sin asignacion de IPs publicas automaticamente
+* No Automatic public IP assigment
 
-### Subnet 6 (Privada)
-* Bloque de IP: 192.168.0.190/27
+### Subnet 6 (Private)
+* Address Block: 192.168.0.190/27
 * Availability Zone: us-west-2b
-* Sin asignacion de IPs publicas automaticamente
+* No Automatic public IP assigment
 
 ### Internet Gateway
-* Puerta de salida para internet que se le agregara a la VPC
+* Internet Gateway that will be used for the VPC
 
-### Enlace de Internet Gateway
-* Recurso para enlazar el internet gateway a la VPC
+### Internet Gateway Attachment
+* Resource used to attach the internet gateway to the vpc
 
-### Tabla de Enrutamiento Publica
-* Definicion de la tabla de enrutamiento para las subredes publicas
+### Public Route Table
+* Resource to define a route table that will be used by the public subnets
 
-### Ruta a Internet
-* Definicion de la ruta hacia internet para la tabla publica
+### Internet Route
+* Resource that defines the exit to internet in the public subnets
 
-### Asociacion de Subnets publicas
-* Recursos que definen la asociacion de las subnets a la tabla de enrutmiento publica
+### Public Subnets association
+* This resources are used to associate public subnets to the Public Route Table
 
-### Tabla de Enrutamiento Privada
-* Definicion de la tabla de enrutamiento para las subredes publicas
+### Private Route Table
+* Resource that defines the route table that will be used by the public subnets
 
-### Asociacion de Subnets privadas
-* Recursos que definen la asociacion de las subnets a la tabla de enrutmiento publica
+### Private Subnets association
+* This resources are used to associate private subnets to the Privat Route Table
 
-### Definicion de Grupo de seguridad para la VPC
-* Define las reglas de entrada para la VPC
+### VPC's Security Group Definition
+* Defines the inbound rules for the vpc
 
 ## Outputs
-* VPC: Id de la VPC creada
-* SubnetPublic1: Id de la subnet publica 1
-* SubnetPublic2: Id de la subnet publica 2
-* SubnetPublic3: Id de la subnet publica 3
+* VPC: Id of the created VPC
+* SubnetPublic1: id of the public subnet 1
+* SubnetPublic2: Id of the public subnet 2
+* SubnetPublic3: Id of the public subnet 3

@@ -1,19 +1,17 @@
 # lconf.yml
 
-## Parametros
+## Parameters
 | Parameter      | Description | Type    |
 | :---        |    :----:   |          ---: |
-| SecurityGroupLC     | Id del grupo de Seguridad creado  |   String |
-| PublicSubnet1     |  Id del Volumen de Sistema de archivos  |   String |
+| SecurityGroupLC     | Id the security group   |   String |
+  EFSVol |        |  Id the efs file system  |   String |
 
 
-## Recursos
+## Resources
 
 ### LConfiguration
-* Configuracion de plantilla para las EC2 que se despliegan en la VPC
+* This resource creates the launch configuration template for an EC2 instance
 
-### Punto de Montaje de EFS
-* Punto de montaje del sistema de archivos
 
 ## Outputs
-* LConf: id o nombre de la configuracion creada para las EC2
+* LConf: id or name of the Launch configuration created

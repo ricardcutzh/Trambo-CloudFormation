@@ -16,12 +16,12 @@ Create exercise 4 using cloudformation
 | VPC     | Name of the vpc that will be created   |   String |
 <!---->
 
-### Rescursos
+### Resources
 
 #### Network Stack
 * This stack is in charge of creating the resources in the vpc.yml file. This file will create everything related to private and public networks
 * Stack Definition: vpc.yml
-##### Parametros De Stack
+##### Parameters
 <!---->
 | Parameter      | Description | Type    |
 | :---        |    :----:   |          ---: |
@@ -33,7 +33,7 @@ Create exercise 4 using cloudformation
 * This stack is in charge of creating the EFS Volume
 * Stack Definition: efs.yml
 
-##### Parametros De Stack
+##### Parameters
 <!---->
 | Parameter      | Description | Type    |
 | :---        |    :----:   |          ---: |
@@ -48,7 +48,7 @@ Create exercise 4 using cloudformation
 * This stack is in charge of creating the launch configuration that each EC2 instance will have.
 * Stack Definition: lconf.yml
 
-##### Parametros De Stack
+##### Parameters
 | Parameter      | Description | Type    |
 | :---        |    :----:   |          ---: |
 | SecurityGroupLC    | ID of the security group   |   String |
@@ -58,7 +58,7 @@ Create exercise 4 using cloudformation
 * Stack in charge of creating the Auto Scaling Group
 * Stack Definition: scl.yml
 
-##### Parametros De Stack
+##### Parameters
 | Parameter      | Description | Type    |
 | :---        |    :----:   |          ---: |
 | LaunchConfiguration    | Launch Configuration id created in the LCAutoScalingStack   |   String |
@@ -68,5 +68,5 @@ Create exercise 4 using cloudformation
 | Subnet3    | ID of the public subnet 3    |   String|
 | SGroup    | ID of the Security Group created  |   String |
 
-## Diagrama
+## Diagram
 ![Diagram](AWS.jpg)
