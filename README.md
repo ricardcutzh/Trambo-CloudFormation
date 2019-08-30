@@ -2,7 +2,7 @@
 ## Exercise 5
 
 Create exercise 4 using cloudformation
-Consider:
+- Consider:
  - Use nested stacks to add logic to each resource
  - Create the vpc from excercise 3 without peering
 
